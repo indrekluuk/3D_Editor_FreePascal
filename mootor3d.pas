@@ -19,7 +19,7 @@ type
                varv:byte;
                end;
 
-   nelinurk3D = record
+   nelinurk3D = packed record
                 x,y,z:array[0..3] of longint;
                 varv:word;
                 end;
@@ -81,7 +81,7 @@ procedure loe_objekt3D(var objekt:objekt3D;fail:string);
  begin
  with objekt do
    begin
-   assign(f,fail);
+   assign(f, 'C:\development\pascal\omalooming\editor\' + fail);
    reset(f,1);
    BlockRead(f,w,SizeOf(w));
    nelinurkasid:=w;
@@ -142,7 +142,7 @@ procedure lisa_objekt3D(var objekt:objekt3D;x,y,z:longint;a,b,c:Single;var obuff
  getmem(p_buffer,sizeof(objektibuffer3D));
  p_buffer^.eelmine:=nil;
  p_buffer^.jargmine:=obuffer;
- obuffer^.eelmine:=p_buffer;
+ if (obuffer <> nil) then obuffer^.eelmine:=p_buffer;
  obuffer:=p_buffer;
  obuffer^.objekt:=@objekt;
  obuffer^.x:=x;

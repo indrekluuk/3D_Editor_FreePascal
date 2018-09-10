@@ -1,4 +1,4 @@
-uses mootor3d,crt,graph,msmouse,varia;
+uses mootor3d,crt,graph,mouse,varia;
 
 
 const
@@ -325,9 +325,10 @@ procedure Salvesta;
    for j:=0 to 3 do BlockWrite(f,kujund.Nelinurk[i-1].z[j],SizeOf(kujund.Nelinurk[i-1].z[j]));
    BlockWrite(f,kujund.Nelinurk[i-1].varv,SizeOf(kujund.Nelinurk[i-1].varv));
    end;
- BlockWrite(f,0,2);
- BlockWrite(f,0,2);
- BlockWrite(f,0,2);
+ i:=0;
+ BlockWrite(f,i,2);
+ BlockWrite(f,i,2);
+ BlockWrite(f,i,2);
  close(f);
  end;
 
@@ -401,24 +402,27 @@ procedure Laadi;
  arvuta_pildi_suurus3D(400,300,ekraan);
 
  Enda_koordinaadid;
- SetMouseWindow(0,0,200,200);
- SetMousePos(100,100);
+ //SetMouseWindow(0,0,200,200);
+ SetMouseXY(100,100);
  repeat
    Pilt_ekraanile;
 
    while (not keypressed) and (valikud[1].on=1) do
      begin
-     GetMouseState(hx,hy,state);
+     state := GetMouseButtons;
+     hx := GetMouseX;
+     hy := GetMouseY;
+     //GetMouseState(hx,hy,state);
      if (hx<>100) or (hy<>100) then
        begin
-     if (state and RButton)=RButton then
+     if (state and MouseRightButton)=MouseRightButton then
        begin
        z:=round(z-cos(a)*(hy-100)*25);
        x:=round(x+sin(a)*(hy-100)*25);
        z:=round(z+sin(a)*(hx-100)*25);
        x:=round(x+cos(a)*(hx-100)*25);
        end else
-     if (state and LButton)=LButton then
+     if (state and MouseLeftButton)=MouseLeftButton then
        begin
        y:=y-(hy-100)*25;
        end else
@@ -430,7 +434,7 @@ procedure Laadi;
        if b>Pi*2 then b:=b-Pi*2;
        if b<0 then b:=b+Pi*2;
        end;
-       SetMousePos(100,100);
+       SetMouseXY(100,100);
        Pilt_ekraanile;
        Enda_koordinaadid;
        end;
@@ -457,7 +461,7 @@ procedure Laadi;
        #43:if kujund.nelinurkasid>0 then begin ring(kujund.nelinurk[valitud_nelinurk-1].varv,255,1);varvijoon;end;
        #45:if kujund.nelinurkasid>0 then begin ring(kujund.nelinurk[valitud_nelinurk-1].varv,255,-1);varvijoon;end;
        'k','K': Telgedemuutmine;
-       'o','O': begin valikud[1].on:=valikud[1].on xor 1;kirjuta_valikud;SetMousePos(100,100);end;
+       'o','O': begin valikud[1].on:=valikud[1].on xor 1;kirjuta_valikud;SetMouseXY(100,100);end;
        's','S': Salvesta;
        'l','L': Laadi;
        end;
