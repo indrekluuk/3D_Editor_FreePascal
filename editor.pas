@@ -421,11 +421,11 @@ procedure Laadi;
          z:=round(z+sin(a)*(hx-hx_prev)*25);
          x:=round(x+cos(a)*(hx-hx_prev)*25);
          end
-       else if (state and LButton)=LButton then
+       else if (state and MButton)=MButton then
          begin
          y:=y-(hy-hy_prev)*25;
          end
-       else
+       else if (state and LButton)=LButton then
          begin
          a:=a-(hx-hx_prev)/100;
          if a>Pi*2 then a:=a-Pi*2;
