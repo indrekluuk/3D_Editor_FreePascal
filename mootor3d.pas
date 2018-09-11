@@ -81,7 +81,7 @@ procedure loe_objekt3D(var objekt:objekt3D;fail:string);
  begin
  with objekt do
    begin
-   assign(f, 'C:\development\pascal\omalooming\editor\' + fail);
+   assign(f, fail);
    reset(f,1);
    BlockRead(f,w,SizeOf(w));
    nelinurkasid:=w;

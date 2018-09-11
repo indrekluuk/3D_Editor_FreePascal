@@ -8,7 +8,8 @@ const
                                            245,265,285);
 
    varv:array[1..5] of byte=(15,16,23,12,3);
-   objektikaust='C:\development\pascal\omalooming\editor\objektid\';
+   kaust='C:\development\pascal\omalooming\editor\';
+   objektikaust=kaust + 'objektid\';
 
 type
    check = record
@@ -221,7 +222,7 @@ procedure vaartusta_teljed;
        p_nelinurk:^nelinurk3D;
  begin
  pikkus:=2*uhikuid;
- Loe_objekt3D(teljed,'telg.o3d');
+ Loe_objekt3D(teljed,kaust + 'telg.o3d');
  p_nelinurk:=teljed.nelinurk;
  getmem(teljed.nelinurk,sizeof(nelinurk3D)*pikkus*6);
  teljed.nelinurkasid:=pikkus*6;
