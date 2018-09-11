@@ -2,7 +2,7 @@ unit Varia;
 
 interface
 
-uses crt,graph;
+uses wincrt,graph;
 
 procedure kirjuta_num(x,y,pikkus:integer;var arv:longint);
 procedure kirjuta(x,y,pikkus:integer;var tekst:string);

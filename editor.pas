@@ -1,4 +1,4 @@
-uses mootor3d,crt,graph,mouse,varia;
+uses mootor3d,wincrt,graph,winmouse,varia;
 
 
 const
@@ -8,7 +8,7 @@ const
                                            245,265,285);
 
    varv:array[1..5] of byte=(15,16,23,12,3);
-   objektikaust='objektid\';
+   objektikaust='C:\development\pascal\omalooming\editor\objektid\';
 
 type
    check = record
@@ -25,7 +25,7 @@ type
        Valitud_nelinurk:integer;
        Valitud_koordinaat:integer;
        valikud:array[1..2] of check;
-       hx,hy,state,x,y,z:longint;
+       hx,hy,hx_prev,hy_prev,state,x,y,z:longint;
        a,b,c:single;
 
 procedure kirjuta_koordinaadid;
@@ -403,38 +403,38 @@ procedure Laadi;
 
  Enda_koordinaadid;
  //SetMouseWindow(0,0,200,200);
- SetMouseXY(100,100);
+ //SetMousePos(100,100);
+ GetMouseState(hx_prev,hy_prev,state);
  repeat
    Pilt_ekraanile;
 
    while (not keypressed) and (valikud[1].on=1) do
      begin
-     state := GetMouseButtons;
-     hx := GetMouseX;
-     hy := GetMouseY;
-     //GetMouseState(hx,hy,state);
-     if (hx<>100) or (hy<>100) then
+     GetMouseState(hx,hy,state);
+     if (hx<>hx_prev) or (hy<>hy_prev) then
        begin
-     if (state and MouseRightButton)=MouseRightButton then
-       begin
-       z:=round(z-cos(a)*(hy-100)*25);
-       x:=round(x+sin(a)*(hy-100)*25);
-       z:=round(z+sin(a)*(hx-100)*25);
-       x:=round(x+cos(a)*(hx-100)*25);
-       end else
-     if (state and MouseLeftButton)=MouseLeftButton then
-       begin
-       y:=y-(hy-100)*25;
-       end else
-       begin
-       a:=a-(hx-100)/100;
-       if a>Pi*2 then a:=a-Pi*2;
-       if a<0 then a:=a+Pi*2;
-       b:=b-(hy-100)/100;
-       if b>Pi*2 then b:=b-Pi*2;
-       if b<0 then b:=b+Pi*2;
-       end;
-       SetMouseXY(100,100);
+       if (state and RButton)=RButton then
+         begin
+         z:=round(z-cos(a)*(hy-hy_prev)*25);
+         x:=round(x+sin(a)*(hy-hy_prev)*25);
+         z:=round(z+sin(a)*(hx-hx_prev)*25);
+         x:=round(x+cos(a)*(hx-hx_prev)*25);
+         end
+       else if (state and LButton)=LButton then
+         begin
+         y:=y-(hy-hy_prev)*25;
+         end
+       else
+         begin
+         a:=a-(hx-hx_prev)/100;
+         if a>Pi*2 then a:=a-Pi*2;
+         if a<0 then a:=a+Pi*2;
+         b:=b-(hy-hy_prev)/100;
+         if b>Pi*2 then b:=b-Pi*2;
+         if b<0 then b:=b+Pi*2;
+         end;
+       //SetMousePos(100,100);
+       GetMouseState(hx_prev,hy_prev,state);
        Pilt_ekraanile;
        Enda_koordinaadid;
        end;
@@ -461,7 +461,7 @@ procedure Laadi;
        #43:if kujund.nelinurkasid>0 then begin ring(kujund.nelinurk[valitud_nelinurk-1].varv,255,1);varvijoon;end;
        #45:if kujund.nelinurkasid>0 then begin ring(kujund.nelinurk[valitud_nelinurk-1].varv,255,-1);varvijoon;end;
        'k','K': Telgedemuutmine;
-       'o','O': begin valikud[1].on:=valikud[1].on xor 1;kirjuta_valikud;SetMouseXY(100,100);end;
+       'o','O': begin valikud[1].on:=valikud[1].on xor 1;kirjuta_valikud;{SetMousePos(100,100);}end;
        's','S': Salvesta;
        'l','L': Laadi;
        end;
