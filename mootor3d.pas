@@ -239,9 +239,9 @@ procedure vabasta_ZBuffer3D(var ZBuffer:p_ZBuffer3D);
 procedure arvuta_pildi_suurus3D(x,y:word;var pilt:p_word);
  begin
  GetMem(pilt,12+x*y*2);
- pilt[0]:=x-1;
+ pilt[0]:=x;
  pilt[1]:=0;
- pilt[2]:=y-1;
+ pilt[2]:=y;
  pilt[3]:=0;
  pilt[4]:=0;
  pilt[5]:=0;
@@ -250,8 +250,8 @@ procedure arvuta_pildi_suurus3D(x,y:word;var pilt:p_word);
 procedure vabasta_pilt3D(var pilt:p_word);
   var x,y:word;
  begin
- x:=pilt[0]+1;
- y:=pilt[2]+1;
+ x:=pilt[0];
+ y:=pilt[2];
  FreeMem(pilt,12+x*y*2);
  end;
 
@@ -523,7 +523,7 @@ procedure joonista_pilt3D(ZBuffer:p_ZBuffer3D;pilt:p_word;dx,dy,taust:integer);
  begin
  x:=pilt[0];
  y:=pilt[2];
- if taust>=0 then FillWord(pilt[6],(x+1)*(y+1),taust);
+ if taust>=0 then FillWord(pilt[6],(x)*(y),3);
 
  if ZBuffriSuurus3D=0 then exit;
  for i:=ZBuffriSuurus3D-1 downto 0 do
@@ -538,7 +538,7 @@ procedure joonista_pilt3D(ZBuffer:p_ZBuffer3D;pilt:p_word;dx,dy,taust:integer);
          nelinurk[j].y:=round(hnurk[j].y/(hnurk[j].z+dy)*dy)*-1+y div 2;
          end;
 
-     hulknurk(n,nelinurk,ZBuffer[i].varv,x,y);
+     hulknurk(n,nelinurk,ZBuffer[i].varv,x-1,y-1);
 
      end;
    end;
