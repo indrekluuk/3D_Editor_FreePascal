@@ -11,6 +11,27 @@ const
    kaust='';
    objektikaust=kaust + 'objektid\';
 
+   t_NAITA_TELGESID     = 1;
+   t_OBJEKTI_VAATLEMINE = 2;
+   t_VARVI_NR           = 3;
+   t_SALVESTA           = 4;
+   t_LAADI              = 5;
+   t_VALE_FAILINIMI     = 6;
+   t_INFORMATSIOON1     = 7;
+   t_INFORMATSIOON2     = 8;
+
+   tekstid:array[1..8] of string = (
+        'Show a(x)es' {'(k)oordinaat teljed'},
+        '(F)ree view' {'(O)bjekti vaatamine'},
+        'Color no.' {'V„rvi nr.'},
+        'Save object as ...' {'Faili nimi kuhu salvestada.'},
+        'Load an object ...' {'Faili nimi kust lugeda.'},
+        'File doesn''t exitst!' {'Sellist faili ei eksisteeri!'},
+        'Hold down mouse buttons to move',
+        '(L)oad an object. (S)ave object. ESC - exit program.'
+        );
+
+
 type
    check = record
            nimi:string[50];
@@ -204,15 +225,15 @@ procedure algvaartusta;
  kujund.Olek:=nil;
  Valitud_nelinurk:=1;
  Valitud_koordinaat:=1;
- valikud[1].nimi:='(o)bjekti vaatamine';
+ valikud[1].nimi:=tekstid[t_OBJEKTI_VAATLEMINE];
  valikud[1].on:=1;
- valikud[2].nimi:='(k)oordinaat teljed';
+ valikud[2].nimi:=tekstid[t_NAITA_TELGESID];
  valikud[2].on:=0;
- x:=0;
- y:=0;
- z:=0;
- a:=0;
- b:=0;
+ x:=-800;
+ y:=700;
+ z:=-1000;
+ a:=(324/360)*2*Pi;
+ b:=(334/360)*2*Pi;
  c:=0;
  end;
 
@@ -311,7 +332,7 @@ procedure Salvesta;
  setfillstyle(1,varv[3]);
  setcolor(varv[1]);
  bar(100,100,340,150);
- outtextxy(110,110,'Faili nimi kuhu salvestada.');
+ outtextxy(110,110,tekstid[t_SALVESTA]);
  setfillstyle(1,varv[2]);
  bar(110,125,330,140);
  kirjuta(114,129,25,fnimi);
@@ -333,6 +354,17 @@ procedure Salvesta;
  close(f);
  end;
 
+procedure Laadi_objekt(fnimi:string);
+ begin
+ Vabasta_Objekt3D(kujund);
+ Loe_Objekt3D(kujund,fnimi);
+ if kujund.nelinurkasid>0 then valitud_nelinurk:=1 else valitud_nelinurk:=0;
+ arvuta_ZBuffri_suurus3D(obuffer,ZBuffer);
+ varvijoon;
+ kirjuta_koordinaadid;
+ nelinurkade_nimekiri;
+ end;
+
 procedure Laadi;
    var fnimi:string;
        f:file;
@@ -341,7 +373,7 @@ procedure Laadi;
  setfillstyle(1,varv[3]);
  setcolor(varv[1]);
  bar(100,100,340,150);
- outtextxy(110,110,'Faili nimi kust lugeda.');
+ outtextxy(110,110,tekstid[t_LAADI]);
  setfillstyle(1,varv[2]);
  bar(110,125,330,140);
  kirjuta(114,129,25,fnimi);
@@ -355,18 +387,12 @@ procedure Laadi;
    begin
    setfillstyle(1,varv[3]);
    bar(100,100,340,150);
-   outtextxy(110,120,'Sellist faili ei eksisteeri!');
+   outtextxy(110,120,tekstid[t_VALE_FAILINIMI]);
    if readkey=#0 then readkey;
    exit;
    end;
  close(f);
- Vabasta_Objekt3D(kujund);
- Loe_Objekt3D(kujund,objektikaust+fnimi);
- if kujund.nelinurkasid>0 then valitud_nelinurk:=1 else valitud_nelinurk:=0;
- arvuta_ZBuffri_suurus3D(obuffer,ZBuffer);
- varvijoon;
- kirjuta_koordinaadid;
- nelinurkade_nimekiri;
+ Laadi_objekt(objektikaust+fnimi);
  end;
 
 
@@ -383,7 +409,11 @@ procedure Laadi;
  bar(430,10,510,260);
  bar(430,285,510,300);
  setcolor(varv[1]);
- outtextxy(430,275,'V„rvi nr.');
+ outtextxy(430,275,tekstid[t_VARVI_NR]);
+
+ outtextxy(5,447,tekstid[t_INFORMATSIOON1]);
+ outtextxy(5,467,tekstid[t_INFORMATSIOON2]);
+
  for i:=1 to 12 do
    begin
    if (i+2) mod 3 = 0 then outtextxy(540,koordinaadid[i]+5,'X');
@@ -406,6 +436,8 @@ procedure Laadi;
  //SetMouseWindow(0,0,200,200);
  //SetMousePos(100,100);
  GetMouseState(hx_prev,hy_prev,state_prev);
+ Laadi_objekt(objektikaust+'3d.o3d');
+
  repeat
    Pilt_ekraanile;
 
@@ -461,8 +493,8 @@ procedure Laadi;
        #13:Koordinaadi_muutmine;
        #43:if kujund.nelinurkasid>0 then begin ring(kujund.nelinurk[valitud_nelinurk-1].varv,255,1);varvijoon;end;
        #45:if kujund.nelinurkasid>0 then begin ring(kujund.nelinurk[valitud_nelinurk-1].varv,255,-1);varvijoon;end;
-       'k','K': Telgedemuutmine;
-       'o','O': begin valikud[1].on:=valikud[1].on xor 1;kirjuta_valikud;{SetMousePos(100,100);}end;
+       'x','X'{'k','K'}: Telgedemuutmine;
+       'f','F'{'o','O'}: begin valikud[1].on:=valikud[1].on xor 1;kirjuta_valikud;{SetMousePos(100,100);}end;
        's','S': Salvesta;
        'l','L': Laadi;
        end;
