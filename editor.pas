@@ -8,7 +8,7 @@ const
                                            245,265,285);
 
    varv:array[1..5] of byte=(15,16,23,12,3);
-   kaust='C:\development\pascal\omalooming\editor\';
+   kaust='';
    objektikaust=kaust + 'objektid\';
 
 type

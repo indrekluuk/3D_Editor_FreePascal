@@ -1,7 +1,7 @@
 unit mootor3d;
 
 interface
-uses graph,crt,varia;
+uses graph,wincrt,varia;
 
 type
    punkt3D = record
