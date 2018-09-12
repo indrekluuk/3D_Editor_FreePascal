@@ -523,7 +523,7 @@ procedure joonista_pilt3D(ZBuffer:p_ZBuffer3D;pilt:p_word;dx,dy,taust:integer);
  begin
  x:=pilt[0];
  y:=pilt[2];
- if taust>=0 then FillWord(pilt[6],(x)*(y),3);
+ if taust>=0 then FillWord(pilt[6],(x)*(y),taust);
 
  if ZBuffriSuurus3D=0 then exit;
  for i:=ZBuffriSuurus3D-1 downto 0 do

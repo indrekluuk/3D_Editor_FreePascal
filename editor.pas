@@ -26,7 +26,7 @@ type
        Valitud_nelinurk:integer;
        Valitud_koordinaat:integer;
        valikud:array[1..2] of check;
-       hx,hy,hx_prev,hy_prev,state,x,y,z:longint;
+       hx,hy,hx_prev,hy_prev,state,state_prev,x,y,z:longint;
        a,b,c:single;
 
 procedure kirjuta_koordinaadid;
@@ -405,7 +405,7 @@ procedure Laadi;
  Enda_koordinaadid;
  //SetMouseWindow(0,0,200,200);
  //SetMousePos(100,100);
- GetMouseState(hx_prev,hy_prev,state);
+ GetMouseState(hx_prev,hy_prev,state_prev);
  repeat
    Pilt_ekraanile;
 
@@ -414,18 +414,18 @@ procedure Laadi;
      GetMouseState(hx,hy,state);
      if (hx<>hx_prev) or (hy<>hy_prev) then
        begin
-       if (state and RButton)=RButton then
+       if (state = state_prev) and ((state and RButton)=RButton) then
          begin
          z:=round(z-cos(a)*(hy-hy_prev)*25);
          x:=round(x+sin(a)*(hy-hy_prev)*25);
          z:=round(z+sin(a)*(hx-hx_prev)*25);
          x:=round(x+cos(a)*(hx-hx_prev)*25);
          end
-       else if (state and MButton)=MButton then
+       else if (state = state_prev) and ((state and MButton)=MButton) then
          begin
          y:=y-(hy-hy_prev)*25;
          end
-       else if (state and LButton)=LButton then
+       else if (state = state_prev) and ((state and LButton)=LButton) then
          begin
          a:=a-(hx-hx_prev)/100;
          if a>Pi*2 then a:=a-Pi*2;
@@ -435,7 +435,7 @@ procedure Laadi;
          if b<0 then b:=b+Pi*2;
          end;
        //SetMousePos(100,100);
-       GetMouseState(hx_prev,hy_prev,state);
+       GetMouseState(hx_prev,hy_prev,state_prev);
        Pilt_ekraanile;
        Enda_koordinaadid;
        end;
